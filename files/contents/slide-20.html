@@ -13,7 +13,6 @@ window.addEventListener('devicelight', function(event) {
             var el = document.getElementById('slide-20');
 
             window.addEventListener('devicelight', function (event) {
-                console.log(event.value);
                 el.style.backgroundColor = event.value < 100 ? 'rgba(0,0,0,' + (1 - event.value/100) + ')' : '';
             });
         };

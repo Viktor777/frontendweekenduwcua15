@@ -21,12 +21,13 @@ speechSynthesis.speak(su);
                 this.lang = lang;
 
                 this.el.addEventListener('focus', function () {
-                    this.speak(event.target.placeholder).then(function () {
-                        return this.recognize().then(function (text) {
-                            this.el.value = text;
-                        }.bind(this));
-                    }.bind(this));
-                }.bind(this), false);
+                    this.speak(event.target.placeholder)
+                            .then(function () {
+                                return this.recognize();
+                            }.bind(this)).then(function (text) {
+                                this.el.value = text;
+                            }.bind(this));
+                        }.bind(this), false);
             }
 
             SpeechAPI.prototype = {
