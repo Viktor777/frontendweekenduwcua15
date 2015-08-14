@@ -1,0 +1,76 @@
+body
+  background: #eee
+  color: #444
+  font-family: $base-font
+  font-size: 25px
+  line-height: 1.4
+  position: relative
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  @media screen and (max-width: $break-point)
+    background: #222
+    color: #eee
+  &.portrait,
+  &.portrait-primary
+    background: darkred
+  &.landscape,
+  &.landscape-primary
+    background: darkgreen
+
+h1, h2, h3, h4, h5, h6
+  color: #fff
+  font-family: $secondary-font
+  padding: 10px 0
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000
+  -webkit-text-stroke: 2px #000
+  @media screen and (max-width: $break-point)
+    color: #222
+    text-shadow: 3px 3px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff
+    -webkit-text-stroke: 2px #fff
+h1
+  font-size: 80px
+  @media screen and (max-width: $break-point)
+    font-size: 60px
+h2
+  font-size: 65px
+  @media screen and (max-width: $break-point)
+    font-size: 40px
+h3
+  font-size: 50px
+  @media screen and (max-width: $break-point)
+    font-size: 30px
+h4
+  font-size: 40px
+  @media screen and (max-width: $break-point)
+    font-size: 25px
+h5
+  font-size: 30px
+  @media screen and (max-width: $break-point)
+    font-size: 20px
+h6
+  font-size: 20px
+  @media screen and (max-width: $break-point)
+    font-size: 15px
+
+\:focus
+  outline: none
+
+strong, b
+  font-weight: 700
+
+em, i
+  font-style: italic
+
+a,
+button
+  color: #0099d4
+  text-decoration: none
+  +transition(color .3s ease, background-color .3s ease, box-shadow .3s ease, border-color .3s ease, opacity .3s ease, text-shadow .3s ease)
+  &:hover
+    color: adjust-lightness(#0099d4, 20)
+  &:active
+    color: adjust-lightness(#0099d4, -10)
+
++selection
+  background-color: #0099d4
+  color: #fff

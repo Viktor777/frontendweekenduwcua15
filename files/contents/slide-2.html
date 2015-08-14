@@ -1,0 +1,12 @@
+<section class="slide">
+    <img src="files/images/ie.jpg" alt="IE" id="ie-2" class="ie">
+</section>
+<script type="text/javascript">
+    document.getElementById('ie-2').addEventListener('load', function () {
+        setTimeout((function (self) {
+            return function () {
+                self.classList.remove('ie');
+            };
+        })(this), 1000);
+    }, false);
+</script>

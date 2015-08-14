@@ -1,0 +1,83 @@
+<section class="slide">
+    <h1>Page Visibility API</h1>
+    <video id="video-2" width="640" height="480" controls>
+        <source src="files/videos/mov_bbb.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</section>
+
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('PageVisibilityAPI')) {
+        fwuwcua15.PageVisibilityAPI = (function () {
+
+            'use strict';
+
+            function PageVisibilityAPI() {
+                this.hiddenName = this.getHiddenName();
+
+                if (this.hiddenName) {
+                    this.eventName = this.hiddenName.replace(/[H|h]idden/, '') + 'visibilitychange';
+                    this.video = document.getElementById('video-2');
+
+                    if (this.isStorageExists()) {
+                        sessionStorage.videoPlaying = 'paused';
+
+                        this.addEventListeners();
+                    }
+                }
+            }
+
+            PageVisibilityAPI.prototype.getHiddenName = function () {
+                var prefixes = ['webkit', 'moz', 'ms', 'o'],
+                    hiddenName = 'hidden';
+
+                if (hiddenName in document) {
+                    return hiddenName;
+                }
+
+                for (var i = 0; i < prefixes.length; i++) {
+                    hiddenName = prefixes[i] + 'Hidden';
+
+                    if (hiddenName in document) {
+                        return hiddenName;
+                    }
+                }
+
+                return null;
+            };
+
+            PageVisibilityAPI.prototype.isStorageExists = function () {
+                return typeof Storage !== 'undefined';
+            };
+
+            PageVisibilityAPI.prototype.addEventListeners = function () {
+                this.addVideoListener();
+                this.addPageVisibilityAPIListener();
+            };
+
+            PageVisibilityAPI.prototype.addVideoListener = function () {
+                this.video.addEventListener('play', function () {
+                    sessionStorage.videoPlaying = 'played';
+                });
+            };
+
+            PageVisibilityAPI.prototype.addPageVisibilityAPIListener = function () {
+                document.addEventListener(this.eventName, (function (self) {
+                    return function () {
+                        if (document[self.hiddenName]) {
+                            self.video.pause();
+                        } else if (self.video.paused && sessionStorage.videoPlaying === 'played') {
+                            self.video.play();
+                        }
+                    };
+                })(this));
+            };
+
+            return PageVisibilityAPI;
+        })();
+    }
+
+    new fwuwcua15.PageVisibilityAPI();
+
+</script>

@@ -1,0 +1,92 @@
+<section class="slide">
+    <h1>Web Worker API</h1>
+    <pre><code class="javascript" contenteditable="true">
+var worker = new Worker('worker.js');
+
+worker.postMessage(100);
+
+worker.addEventListener('message', function (event) {
+    alert(event.data);
+}, false);
+...
+// worker.js
+importScripts('path/to/jquery.js', 'path/to/file.js');
+
+addEventListener('message', function(event) {
+    ...
+    for (var i = 0; i < 10000000; i++) {
+        result += factorial(event.data)
+    }
+
+    postMessage(result);
+}, false);
+    </code></pre>
+    <button id="start-7" class="button">Start</button>
+    <button id="stop-7" class="button" style="display: none;">Stop</button>
+</section>
+<script type="text/javascript">
+
+    fwuwcua15.WebWorkerAPI = (function () {
+
+        'use strict';
+
+        function WebWorkerAPI(filename) {
+
+            if (this.isExists()) {
+                this.filename = filename;
+                this.worker = null;
+                this.count = 100;
+
+                this.addEventListeners();
+            }
+        }
+
+        WebWorkerAPI.prototype.isExists = function () {
+            return !!('Worker' in window);
+        };
+
+        WebWorkerAPI.prototype.addEventListeners = function () {
+            this.addStartButtonListener();
+            this.addStopButtonListener();
+        };
+
+        WebWorkerAPI.prototype.addStartButtonListener = function () {
+            document.getElementById('start-7').addEventListener('click', (function (self) {
+                return function (event) {
+                    event.preventDefault();
+
+                    self.worker = new Worker(self.filename);
+                    self.worker.postMessage(self.count);
+                    self.addMessageListener();
+
+                    document.getElementById('stop-7').style.display = '';
+                };
+            })(this), false);
+        };
+
+        WebWorkerAPI.prototype.addStopButtonListener = function () {
+            document.getElementById('stop-7').addEventListener('click', (function (self) {
+                return function (event) {
+                    event.preventDefault();
+
+                    if (self.worker) {
+                        self.worker.terminate();
+
+                        event.target.style.display = 'none';
+                    }
+                };
+            })(this), false);
+        };
+
+        WebWorkerAPI.prototype.addMessageListener = function () {
+            this.worker.addEventListener('message', function (event) {
+                alert(event.data);
+            }, false);
+        };
+
+        return WebWorkerAPI;
+    })();
+
+    new fwuwcua15.WebWorkerAPI('worker.js');
+
+</script>

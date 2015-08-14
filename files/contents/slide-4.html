@@ -1,0 +1,80 @@
+<section class="slide">
+    <h1>Notification API</h1>
+    <pre><code class="javascript" contenteditable="true">
+new Notification('Frontend Weekend', {
+    body: 'Hello, I love HTML.',
+    tag: 'UWCUA',
+    icon: 'path/to/file'
+});
+...
+Notification.requestPermission(function (permission) {
+    ...
+    if (permission === 'granted') { // 'denied', 'default'
+        ...
+    }
+});
+...
+// onclick, onshow, onerror, onclose
+    </code></pre>
+    <button id="notification-1" class="button">Notify me!</button>
+</section>
+
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('NotificationAPI')) {
+        fwuwcua15.NotificationAPI = (function () {
+
+            'use strict';
+
+            function NotificationAPI() {
+
+                if (this.isExists()) {
+                    this.addEventListeners();
+                }
+            }
+
+            NotificationAPI.prototype.isExists = function () {
+                return !!('Notification' in window);
+            };
+
+            NotificationAPI.prototype.addEventListeners = function () {
+                document.getElementById('notification-1').addEventListener('click', (function (self) {
+                    return function (event) {
+                        event.preventDefault();
+
+                        if (Notification.permission === 'granted') {
+                            self.notify();
+                        } else if (Notification.permission !== 'denied') {
+                            Notification.requestPermission(function (permission) {
+
+                                if (!('permission' in Notification)) {
+                                    Notification.permission = permission;
+
+                                    return null;
+                                }
+
+                                if (permission === 'granted') {
+                                    self.notify();
+                                }
+                            });
+                        }
+
+                    };
+                })(this), false);
+            };
+
+            NotificationAPI.prototype.notify = function () {
+                this.notification = new Notification('Frontend Weekend', {
+                    body: 'Hello, I love HTML5.',
+                    tag: 'UWCUA',
+                    icon: 'files/images/HTML5_logo.png'
+                });
+            };
+
+            return NotificationAPI;
+        })();
+    }
+
+    new fwuwcua15.NotificationAPI();
+
+</script>

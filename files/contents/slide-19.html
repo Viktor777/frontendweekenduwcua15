@@ -1,0 +1,102 @@
+<section class="slide">
+    <h1>Web Speech API</h1>
+    <pre><code class="javascript" contenteditable="true">
+var su = new SpeechSynthesisUtterance();
+
+su.lang = "ru";
+su.text = "Привет";
+speechSynthesis.speak(su);
+    </code></pre>
+    <input type="text" id="input-19" class="input" placeholder="Пожалуйста, поговори со мной">
+</section>
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('SpeechAPI')) {
+        fwuwcua15.SpeechAPI = (function () {
+
+            'use strict';
+
+            function SpeechAPI(id, lang) {
+                this.el = document.getElementById(id);
+                this.lang = lang;
+
+                this.el.addEventListener('focus', function () {
+                    this.speak(event.target.placeholder).then(function () {
+                        return this.recognize().then(function (text) {
+                            this.el.value = text;
+                        }.bind(this));
+                    }.bind(this));
+                }.bind(this), false);
+            }
+
+            SpeechAPI.prototype = {
+                speak: function(text) {
+                    return new Promise(function(resolve, reject) {
+                        if (!SpeechSynthesisUtterance) {
+                            reject('API not supported');
+                        }
+
+                        var utterance = new SpeechSynthesisUtterance(text);
+
+                        utterance.lang = this.lang;
+                        utterance.addEventListener('end', function() {
+                            console.log('Synthesizing completed');
+                            resolve();
+                        });
+
+                        utterance.addEventListener('error', function (event) {
+                            console.log('Synthesizing error');
+                            reject('An error has occurred while speaking: ' + event.error);
+                        });
+
+                        console.log('Synthesizing the text: ' + text);
+                        speechSynthesis.speak(utterance);
+                    }.bind(this));
+                },
+                recognize: function() {
+                    return new Promise(function(resolve, reject) {
+                        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition || null;
+
+                        if (SpeechRecognition === null) {
+                            reject('API not supported');
+                        }
+
+                        var recognizer = new SpeechRecognition();
+
+                        recognizer.addEventListener('result', function (event) {
+                            console.log('Recognition completed');
+                            for (var i = event.resultIndex; i < event.results.length; i++) {
+                                if (event.results[i].isFinal) {
+                                    resolve(event.results[i][0].transcript);
+                                }
+                            }
+                        });
+
+                        recognizer.addEventListener('error', function (event) {
+                            console.log('Recognition error');
+                            reject('An error has occurred while recognizing: ' + event.error);
+                        });
+
+                        recognizer.addEventListener('nomatch', function () {
+                            console.log('Recognition ended because of nomatch');
+                            reject('Error: sorry but I could not find a match');
+                        });
+
+                        recognizer.addEventListener('end', function () {
+                            console.log('Recognition ended');
+                            reject('Error: sorry but I could not recognize your speech');
+                        });
+
+                        console.log('Recognition started');
+                        recognizer.start();
+                    });
+                }
+            };
+
+            return SpeechAPI;
+        })();
+    }
+
+    new fwuwcua15.SpeechAPI('input-19', 'ru');
+
+</script>

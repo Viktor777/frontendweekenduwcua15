@@ -1,0 +1,126 @@
+<section class="slide">
+    <h1>getUserMedia API</h1>
+    <video id="video-4" autoplay></video>
+    <p>
+        <button id="stop-4" class="button">Stop</button>
+    </p>
+</section>
+
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('GetUserMediaAPI')) {
+        fwuwcua15.GetUserMediaAPI = (function () {
+
+            'use strict';
+
+            function GetUserMediaAPI() {
+
+                if (this.isExists()) {
+                    this.video = document.getElementById('video-4');
+                    this.button = document.getElementById('stop-4');
+                    this.filters = ['', 'grayscale', 'sepia', 'blur', 'brightness', 'contrast', 'hue-rotate', 'saturate', 'invert'];
+                    this.active = 0;
+
+                    this.addEventListeners();
+                }
+            }
+
+            GetUserMediaAPI.prototype.isExists = function () {
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+                return navigator.getUserMedia;
+            };
+
+            GetUserMediaAPI.prototype.requestFullscreen = function () {
+
+                if (this.video.requestFullscreen) {
+                    this.video.requestFullscreen();
+                } else if (this.video.webkitRequestFullscreen) {
+                    this.video.webkitRequestFullscreen();
+                } else if (this.video.mozRequestFullScreen) {
+                    this.video.mozRequestFullScreen();
+                }
+            };
+
+            GetUserMediaAPI.prototype.exitFullscreen = function () {
+
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                }
+            };
+
+            GetUserMediaAPI.prototype.addEventListeners = function () {
+                this.addUserMediaListener();
+                this.addFiltersListener();
+                this.addControlListener();
+                this.addKeyDownListener();
+            };
+
+            GetUserMediaAPI.prototype.addUserMediaListener = function () {
+                navigator.getUserMedia({
+                    audio: false,
+                    video: true
+                }, (function (self) {
+                    return function (stream) {
+                        self.stream = stream;
+                        self.video.src = window.URL.createObjectURL(self.stream);
+                    };
+                })(this), function (error) {
+                    console.log(error);
+                });
+            };
+
+            GetUserMediaAPI.prototype.addFiltersListener = function () {
+                this.video.addEventListener('click', (function (self) {
+                    return function (event) {
+                        event.target.className = '';
+                        self.active += 1;
+
+                        if (self.active === self.filters.length) {
+                            self.active = 0;
+                        }
+
+                        if (self.filters[self.active]) {
+                            event.target.classList.add(self.filters[self.active]);
+                        }
+                    };
+                })(this), false)
+            };
+
+            GetUserMediaAPI.prototype.addControlListener = function () {
+                this.button.addEventListener('click', (function (self) {
+                    return function () {
+                        self.video.pause();
+
+                        if (self.hasOwnProperty('stream') && self.stream) {
+                            self.stream.stop();
+                        }
+                    };
+                })(this), false)
+            };
+
+            GetUserMediaAPI.prototype.addKeyDownListener = function () {
+
+                document.addEventListener('keydown', (function (self) {
+                    return function (event) {
+
+                        if (self.video && event.keyCode === 13) {
+                            self.requestFullscreen();
+                        } else if (self.video && event.keyCode === 27) {
+                            self.exitFullscreen();
+                        }
+                    };
+                })(this), false);
+            };
+
+            return GetUserMediaAPI;
+        })();
+    }
+
+    new fwuwcua15.GetUserMediaAPI();
+
+</script>

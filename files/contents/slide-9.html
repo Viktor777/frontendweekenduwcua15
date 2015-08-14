@@ -1,0 +1,17 @@
+<section class="slide">
+    <h1>getUserMedia API</h1>
+    <pre><code class="javascript" contenteditable="true">
+navigator.getUserMedia({
+    audio: false,
+    video: true
+},
+// successCallback
+function (stream) {
+    document.getElementById('video-id').src = window.URL.createObjectURL(stream);
+},
+// errorCallback
+function (error) {
+    console.log(error);
+});
+    </code></pre>
+</section>

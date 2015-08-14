@@ -1,0 +1,24 @@
+<section id="slide-20" class="slide">
+    <h1>Ambient Light API</h1>
+    <pre><code class="javascript" contenteditable="true">
+window.addEventListener('devicelight', function(event) {
+    console.log(event.value);
+});
+    </code></pre>
+</section>
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('ambientLightAPI')) {
+        fwuwcua15.ambientLightAPI = function () {
+            var el = document.getElementById('slide-20');
+
+            window.addEventListener('devicelight', function (event) {
+                console.log(event.value);
+                el.style.backgroundColor = event.value < 100 ? 'rgba(0,0,0,' + (1 - event.value/100) + ')' : '';
+            });
+        };
+    }
+
+    fwuwcua15.ambientLightAPI();
+
+</script>

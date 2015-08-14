@@ -1,0 +1,89 @@
+<section class="slide">
+    <h1>Battery Status API</h1>
+    <pre><code class="javascript" contenteditable="true">
+navigator.getBattery().then(function (battery) {
+    battery.addEventListener('chargingchange', function () {
+        console.log(battery.charging);
+    });
+    battery.addEventListener('levelchange', function () {
+        console.log(battery.level); // level * 100 (%)
+    });
+    battery.addEventListener('chargingtimechange', , function () {
+        console.log(battery.chargingTime);
+    });
+    battery.addEventListener('dischargingtimechange', , function () {
+        console.log(battery.dischargingTime); // 'Infinity' | time
+    });
+});
+    </code></pre>
+    <progress id="progress-5" max="100"></progress>
+    <div id="level-5"></div>
+    <div id="charging-5"></div>
+    <div id="dischargingTime-5"></div>
+</section>
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('BatteryStatusAPI')) {
+        fwuwcua15.BatteryStatusAPI = (function () {
+
+            'use strict';
+
+            function BatteryStatusAPI() {
+                this.progress = document.getElementById('progress-5');
+                this.level = document.getElementById('level-5');
+                this.charging = document.getElementById('charging-5');
+                this.dischargingTime = document.getElementById('dischargingTime-5');
+
+                navigator.getBattery()
+                        .then(function (battery) {
+                            this.battery = battery;
+                            this.update();
+                            this.addEventListeners();
+                        }.bind(this))
+                        .catch(function (e) {
+                            console.log(e);
+                            this.progress.style.display = 'none';
+                            this.level.style.display = 'none';
+                            this.charging.style.display = 'none';
+                            this.dischargingTime.style.display = 'none';
+                        }.bind(this));
+            }
+
+            BatteryStatusAPI.prototype.addEventListeners = function () {
+                var update = (function (self) {
+                    return function () {
+                        self.update();
+                    };
+                })(this);
+
+                this.battery.addEventListener('chargingchange', update);
+                this.battery.addEventListener('levelchange', update);
+                this.battery.addEventListener('dischargingtimechange', update);
+            };
+
+            BatteryStatusAPI.prototype.update = function () {
+                var l = this.battery.level * 100;
+
+                this.progress.value = l;
+                this.level.innerHTML = this.progress.innerHTML = l + '%';
+
+                if (this.battery.dischargingTime !== 'Infinity') {
+                    this.dischargingTime.innerHTML = this.battery.dischargingTime / 60;
+                } else {
+                    this.dischargingTime.innerHTML = 'Fully charged';
+                }
+
+                if (this.battery.charging) {
+                    this.charging.innerHTML = 'Charging';
+                } else {
+                    this.charging.innerHTML = 'Not charging';
+                }
+            };
+
+            return BatteryStatusAPI;
+        })();
+    }
+
+    new fwuwcua15.BatteryStatusAPI();
+
+</script>

@@ -1,0 +1,47 @@
+<section class="slide">
+    <h1>Vibration API</h1>
+    <pre><code class="javascript" contenteditable="true">
+navigator.vibrate(2000); // vibrate 2s
+...
+navigator.vibrate([2000, 1000, 4000]); // vibrate 2s, wait 1s, vibrate 4s
+    </code></pre>
+    <p>
+        <button id="vibration-12" class="button">Vibrate</button>
+    </p>
+</section>
+<script type="text/javascript">
+
+    if (!fwuwcua15.hasOwnProperty('VibrationAPI')) {
+        fwuwcua15.VibrationAPI = (function () {
+
+            'use strict';
+
+            function VibrationAPI() {
+
+                if (this.isExists()) {
+                    this.time = [500,110,500,110,450,110,200,110,170,40,450,110,200,110,170,40,500];
+                    this.button = document.getElementById('vibration-12');
+
+                    this.addVibrateListener();
+                }
+            }
+
+            VibrationAPI.prototype.isExists = function () {
+                return !!('vibrate' in navigator);
+            };
+
+            VibrationAPI.prototype.addVibrateListener = function () {
+                this.button.addEventListener('click', (function (self) {
+                    return function () {
+                        navigator.vibrate(self.time);
+                    };
+                })(this), false);
+            };
+
+            return VibrationAPI;
+        })();
+    }
+
+    new fwuwcua15.VibrationAPI();
+
+</script>

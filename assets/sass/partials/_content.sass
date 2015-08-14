@@ -1,0 +1,15 @@
+.content
+  display: block
+  margin: 0 auto
+  overflow: auto
+  position: relative
+  max-width: 1024px
+  @media screen and (max-width: $break-point)
+    padding-bottom: 80px
+  &:before
+    content: ''
+    display: block
+    padding-bottom: 75%
+    width: 100%
+    @media screen and (max-width: $break-point)
+      display: none
