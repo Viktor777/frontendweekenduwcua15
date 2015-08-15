@@ -1,8 +1,9 @@
 <section class="slide">
-    <h1>Device Orientation API</h1>
+    <h1>Fullscreen API</h1>
     <pre><code class="javascript" contenteditable="true">
-window.addEventListener('deviceorientation', function (event) {
-    alert(event.gamma, event.beta, event.alpha);
-}, false);
+...
+document.getElementById('magic-id').requestFullscreen();
+...
+document.exitFullscreen();
     </code></pre>
 </section>

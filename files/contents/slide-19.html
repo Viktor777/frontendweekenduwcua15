@@ -1,13 +1,24 @@
 <section class="slide">
     <h1>Web Speech API</h1>
-    <pre><code class="javascript" contenteditable="true">
-var su = new SpeechSynthesisUtterance();
-
-su.lang = "ru";
-su.text = "Привет";
-speechSynthesis.speak(su);
-    </code></pre>
     <label for="input-19">Пожалуйста, поговори со мной</label> <input type="text" id="input-19" class="input">
+    <pre><code class="javascript" contenteditable="true">
+var utterance = new SpeechSynthesisUtterance();
+
+utterance.lang = "ru";
+utterance.text = "Привет";
+speechSynthesis.speak(utterance);
+...
+var recognizer = new SpeechRecognition();
+
+recognizer.addEventListener('result', function (event) {
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+            console.log(event.results[i][0].transcript);
+        }
+    }
+});
+recognizer.start();
+    </code></pre>
 </section>
 <script type="text/javascript">
 
@@ -24,10 +35,10 @@ speechSynthesis.speak(su);
                 this.label.addEventListener('click', function (event) {
                     this.speak(event.target.textContent || event.target.innerText)
                         .then(function () {
-                            return this.recognizer ? this.recognizer.start() :this.recognize()
-                                .then(function (text) {
-                                    this.el.value = text;
-                                }.bind(this));
+                            return this.recognize()
+                                    .then(function (text) {
+                                        this.el.value = text;
+                                    }.bind(this));
                         }.bind(this));
                 }.bind(this), false);
             }

@@ -12,13 +12,13 @@ worker.addEventListener('message', function (event) {
 // worker.js
 importScripts('path/to/jquery.js', 'path/to/file.js');
 
-addEventListener('message', function(event) {
+self.addEventListener('message', function(event) {
     ...
     for (var i = 0; i < 10000000; i++) {
         result += factorial(event.data)
     }
 
-    postMessage(result);
+    self.postMessage(result);
 }, false);
     </code></pre>
     <button id="start-7" class="button">Start</button>

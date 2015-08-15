@@ -1,44 +1,8 @@
 <section class="slide">
     <h1>Device Orientation API</h1>
-    <img src="files/images/logo.png" id="image-18" alt="">
+    <pre><code class="javascript" contenteditable="true">
+window.addEventListener('deviceorientation', function (event) {
+    alert(event.gamma, event.beta, event.alpha);
+}, false);
+    </code></pre>
 </section>
-<script type="text/javascript">
-
-    if (!fwuwcua15.hasOwnProperty('DeviceOrientationAPI')) {
-        fwuwcua15.DeviceOrientationAPI = (function () {
-
-            'use strict';
-
-            function DeviceOrientationAPI() {
-
-                if (this.isExists()) {
-                    this.image = document.getElementById('image-18');
-
-                    this.addEventListeners();
-                }
-            }
-
-            DeviceOrientationAPI.prototype.isExists = function () {
-                return !!('DeviceOrientationEvent' in window);
-            };
-
-            DeviceOrientationAPI.prototype.addEventListeners = function () {
-                window.addEventListener('deviceorientation', (function (self) {
-                    return function (event) {
-                        self.update(event.gamma, event.beta, event.alpha);
-                    };
-                })(this), false);
-            };
-
-            DeviceOrientationAPI.prototype.update = function (g, b, a) {
-                this.image.style.webkitTransform = 'rotate3d(1,0,0,' + (b*(-1)) + 'deg)';
-                this.image.style.transform = 'rotate3d(1,0,0,' + (b*(-1)) + 'deg)';
-            };
-
-            return DeviceOrientationAPI;
-        })();
-    }
-
-    new fwuwcua15.DeviceOrientationAPI();
-
-</script>

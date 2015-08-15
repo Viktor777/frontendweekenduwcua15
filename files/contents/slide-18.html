@@ -1,96 +1,44 @@
 <section class="slide">
-    <h1>Battery Status API</h1>
-    <pre><code class="javascript" contenteditable="true">
-navigator.getBattery().then(function (battery) {
-    battery.addEventListener('chargingchange', function () {
-        console.log(battery.charging);
-    });
-    battery.addEventListener('levelchange', function () {
-        console.log(battery.level); // level * 100 (%)
-    });
-    battery.addEventListener('chargingtimechange', function () {
-        console.log(battery.chargingTime);
-    });
-    battery.addEventListener('dischargingtimechange', function () {
-        console.log(battery.dischargingTime); // 'Infinity' | time
-    });
-});
-    </code></pre>
-    <progress id="progress-5" max="100"></progress>
-    <div id="level-5"></div>
-    <div id="charging-5"></div>
-    <div id="chargingTime-5"></div>
-    <div id="dischargingTime-5"></div>
+    <h1>Device Orientation API</h1>
+    <img src="files/images/logo.png" id="image-18" alt="">
 </section>
 <script type="text/javascript">
 
-    if (!fwuwcua15.hasOwnProperty('BatteryStatusAPI')) {
-        fwuwcua15.BatteryStatusAPI = (function () {
+    if (!fwuwcua15.hasOwnProperty('DeviceOrientationAPI')) {
+        fwuwcua15.DeviceOrientationAPI = (function () {
 
             'use strict';
 
-            function BatteryStatusAPI() {
-                this.progress = document.getElementById('progress-5');
-                this.level = document.getElementById('level-5');
-                this.charging = document.getElementById('charging-5');
-                this.chargingTime = document.getElementById('chargingTime-5');
-                this.dischargingTime = document.getElementById('dischargingTime-5');
+            function DeviceOrientationAPI() {
 
-                if (navigator.getBattery) {
-                    navigator.getBattery()
-                            .then(function (battery) {
-                                this.battery = battery;
-                                this.update();
-                                this.addEventListeners();
-                            }.bind(this))
-                            .catch(function (e) {
-                                console.log(e);
-                                this.hide();
-                            }.bind(this));
-                } else if (navigator.battery || navigator.mozBattery || navigator.webkitBattery) {
-                    this.battery = navigator.battery || navigator.mozBattery || navigator.webkitBattery;
-                    this.update();
+                if (this.isExists()) {
+                    this.image = document.getElementById('image-18');
+
                     this.addEventListeners();
-                } else {
-                    this.hide();
                 }
             }
 
-            BatteryStatusAPI.prototype.addEventListeners = function () {
-                var update = (function (self) {
-                    return function () {
-                        self.update();
+            DeviceOrientationAPI.prototype.isExists = function () {
+                return !!('DeviceOrientationEvent' in window);
+            };
+
+            DeviceOrientationAPI.prototype.addEventListeners = function () {
+                window.addEventListener('deviceorientation', (function (self) {
+                    return function (event) {
+                        self.update(event.gamma, event.beta, event.alpha);
                     };
-                })(this);
-
-                this.battery.addEventListener('chargingchange', update);
-                this.battery.addEventListener('levelchange', update);
-                this.battery.addEventListener('chargingtimechange', update);
-                this.battery.addEventListener('dischargingtimechange', update);
+                })(this), false);
             };
 
-            BatteryStatusAPI.prototype.update = function () {
-                var l = this.battery.level * 100;
-
-                this.progress.value = l;
-                this.level.innerHTML = this.progress.innerHTML = l + '%';
-                this.charging.innerHTML = this.battery.charging ? 'Charging' : 'Not charging';
-//                this.chargingTime = this.battery.chargingTime + ' seconds';
-//                this.dischargingTime.innerHTML = this.battery.dischargingTime !== 'Infinity' ? this.battery.dischargingTime + ' seconds' : 'Fully charged';
+            DeviceOrientationAPI.prototype.update = function (g, b, a) {
+                this.image.style.webkitTransform = 'rotate('+ g +'deg) rotate3d(1,0,0,' + (b*(-1)) + 'deg)';
+                this.image.style.transform = 'rotate('+ g +'deg) rotate3d(1,0,0,' + (b*(-1)) + 'deg)';
             };
 
-            BatteryStatusAPI.prototype.hide = function () {
-                this.progress.style.display = 'none';
-                this.level.style.display = 'none';
-                this.charging.style.display = 'none';
-                this.chargingTime.style.display = 'none';
-                this.dischargingTime.style.display = 'none';
-            };
-
-            return BatteryStatusAPI;
+            return DeviceOrientationAPI;
         })();
     }
 
-    new fwuwcua15.BatteryStatusAPI();
+    new fwuwcua15.DeviceOrientationAPI();
 
 </script>

@@ -1,8 +1,10 @@
 <section class="slide">
     <h1>Pointer Lock API</h1>
-    <canvas id="pointer-lock-15" style="height: 200px; width: 200px;"></canvas>
+    <div id="pointer-lock-15"></div>
     <pre><code class="javascript" contenteditable="true">
-
+document.getElementById('magic-id').requestPointerLock();
+...
+document.exitPointerLock();
     </code></pre>
 </section>
 
@@ -75,9 +77,14 @@
                     var pos = {
                         x: event.movementX || event.mozMovementX || event.webkitMovementX || 0,
                         y: event.movementY || event.mozMovementY || event.webkitMovementY || 0
-                    };
+                    }, bgPos  = window.getComputedStyle(this.el)
+                                    .getPropertyValue('background-position')
+                                    .split(' ')
+                                    .map(function (v) {
+                                        return parseInt(v, 10);
+                                    });
 
-
+                    this.el.style.backgroundPosition = (bgPos[0] - pos.x) + 'px ' + (bgPos[1] - pos.y) + 'px';
                 }
             };
 

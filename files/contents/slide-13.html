@@ -19,14 +19,14 @@ window.addEventListener('userproximity', function (event) {
                 window.addEventListener('userproximity', function (event) {
 
                     if (event.near) {
-                        el.classList.toggle('stopped');
-
-                        if (el.classList.contains('stopped')) {
+                        if (!el.classList.contains('stopped')) {
+                            el.classList.add('stopped');
                             document.body.classList.add('stopped');
                             setTimeout(function () {
                                 document.body.classList.remove('stopped');
                             }, 5000);
                         } else {
+                            el.classList.remove('stopped');
                             document.body.classList.remove('stopped');
                         }
                     }

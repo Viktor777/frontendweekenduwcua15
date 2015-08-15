@@ -1,11 +1,11 @@
-addEventListener('message', function(event) {
+self.addEventListener('message', function(event) {
     var result = 0;
 
     for (var i = 0; i < 10000000; i++) {
         result += factorial(event.data)
     }
 
-    postMessage(result);
+    self.postMessage(result);
 }, false);
 
 function factorial(n) {
