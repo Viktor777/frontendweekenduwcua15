@@ -6,7 +6,6 @@ Notification.requestPermission(function (permission) {
     if (permission === 'granted') { // 'denied', 'default'
         new Notification('Frontend Weekend', {
             body: 'Hello, I love HTML.',
-            tag: 'UWCUA',
             icon: 'path/to/file'
         });
     }
@@ -64,7 +63,6 @@ Notification.requestPermission(function (permission) {
             NotificationAPI.prototype.notify = function () {
                 this.notification = new Notification('Frontend Weekend', {
                     body: 'Hello, I love HTML5.',
-                    tag: 'UWCUA',
                     icon: 'files/images/HTML5_logo.png'
                 });
             };

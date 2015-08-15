@@ -90,7 +90,7 @@ module.exports = (function () {
 
                     if (event.keyCode === 70) {
                         self.slider.requestFullScreen();
-                    } else if (event.keyCode === 27) {
+                    } else if (event.keyCode === 27 && self.slider.exitFullscreen) {
                         self.slider.exitFullscreen();
                     } else if (event.keyCode === 39) {
                         self.slider.next();

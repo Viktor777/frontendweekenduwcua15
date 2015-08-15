@@ -1,6 +1,6 @@
 <section class="slide">
     <h1>Pointer Lock API</h1>
-    <div id="pointer-lock-15"></div>
+    <canvas id="pointer-lock-15"></canvas>
     <pre><code class="javascript" contenteditable="true">
 document.getElementById('magic-id').requestPointerLock();
 ...
@@ -19,10 +19,16 @@ document.exitPointerLock();
                 this.el = document.getElementById(id);
 
                 if (this.isExists()) {
+                    this.pos = {
+                        x: 5,
+                        y: 5
+                    };
+                    this.ctx = this.el.getContext('2d');
                     document.exitPointerLock = document.exitPointerLock ||
                                             document.mozExitPointerLock ||
                                             document.webkitExitPointerLock;
                     this.addEventListeners();
+                    this.draw();
                 }
             }
 
@@ -68,23 +74,46 @@ document.exitPointerLock();
                 onPointerLockChange: function () {
 
                     if (this.isLocked()) {
-                        document.addEventListener("mousemove", this.onMouseMove.bind(this), false);
+                        document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
                     } else {
-                        document.removeEventListener("mousemove", this.onMouseMove.bind(this), false);
+                        document.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
                     }
+
+                    return this;
                 },
                 onMouseMove: function (event) {
-                    var pos = {
-                        x: event.movementX || event.mozMovementX || event.webkitMovementX || 0,
-                        y: event.movementY || event.mozMovementY || event.webkitMovementY || 0
-                    }, bgPos  = window.getComputedStyle(this.el)
-                                    .getPropertyValue('background-position')
-                                    .split(' ')
-                                    .map(function (v) {
-                                        return parseInt(v, 10);
-                                    });
 
-                    this.el.style.backgroundPosition = (bgPos[0] - pos.x) + 'px ' + (bgPos[1] - pos.y) + 'px';
+                    if (!this.isLocked()) {
+                        this.pos.x += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+                        this.pos.y += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+                        this.draw();
+                        requestAnimationFrame(this.onMouseMove.bind(this));
+                    }
+                },
+                draw: function () {
+                    if (this.pos.x > this.el.clientWidth + 10) {
+                        this.pos.x = 0;
+                    }
+
+                    if (this.pos.y > this.el.clientHeight + 10) {
+                        this.pos.y = 0;
+                    }
+
+                    if (this.pos.x < -10) {
+                        this.pos.x = this.el.clientWidth;
+                    }
+
+                    if (this.pos.y < -10) {
+                        this.pos.y = this.el.clientHeight;
+                    }
+
+                    this.ctx.fillStyle = 'lightblue';
+                    this.ctx.fillRect(0, 0, this.el.clientWidth, this.el.clientHeight);
+                    this.ctx.fillStyle = 'black';
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.pos.x, this.pos.y, 10, 0, 2 * Math.PI, true);
+                    this.ctx.fill();
                 }
             };
 

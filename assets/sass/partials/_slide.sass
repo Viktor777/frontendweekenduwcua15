@@ -64,10 +64,11 @@
       max-width: 50%
       position: static
       +translate(0, 0)
-  &.portrait,
-  &.portrait-primary,
-  &.stopped
-    background: darkred
-  &.landscape,
-  &.landscape-primary
-    background: darkgreen
+  @media screen and (max-width: $break-point)
+    &.portrait,
+    &.portrait-primary,
+    &.stopped
+      background: darkred
+    &.landscape,
+    &.landscape-primary
+      background: darkgreen

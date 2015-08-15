@@ -13,7 +13,8 @@ window.addEventListener('userproximity', function (event) {
 
             'use strict';
 
-            var el = document.getElementById('slide-18');
+            var el = document.getElementById('slide-18'),
+                timer;
 
             if ('onuserproximity' in window) {
                 window.addEventListener('userproximity', function (event) {
@@ -22,7 +23,8 @@ window.addEventListener('userproximity', function (event) {
                         if (!el.classList.contains('stopped')) {
                             el.classList.add('stopped');
                             document.body.classList.add('stopped');
-                            setTimeout(function () {
+                            timer && clearTimeout(timer);
+                            timer = setTimeout(function () {
                                 document.body.classList.remove('stopped');
                             }, 5000);
                         } else {

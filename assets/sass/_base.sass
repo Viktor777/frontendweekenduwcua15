@@ -10,13 +10,14 @@ body
   @media screen and (max-width: $break-point)
     background: #222
     color: #eee
-  &.portrait,
-  &.portrait-primary,
-  &.stopped
-    background: darkred
-  &.landscape,
-  &.landscape-primary
-    background: darkgreen
+  @media screen and (max-width: $break-point)
+    &.portrait,
+    &.portrait-primary,
+    &.stopped
+      background: darkred
+    &.landscape,
+    &.landscape-primary
+      background: darkgreen
 
 h1, h2, h3, h4, h5, h6
   color: #fff
