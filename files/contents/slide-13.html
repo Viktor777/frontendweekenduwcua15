@@ -13,11 +13,22 @@ window.addEventListener('userproximity', function (event) {
 
             'use strict';
 
+            var el = document.getElementById('slide-18');
+
             if ('onuserproximity' in window) {
                 window.addEventListener('userproximity', function (event) {
 
                     if (event.near) {
-                        document.getElementById('slide-18').classList.toggle('stopped');
+                        el.classList.toggle('stopped');
+
+                        if (el.classList.contains('stopped')) {
+                            document.body.classList.add('stopped');
+                            setTimeout(function () {
+                                document.body.classList.remove('stopped');
+                            }, 5000);
+                        } else {
+                            document.body.classList.remove('stopped');
+                        }
                     }
                 }, false);
             }
