@@ -1,5 +1,6 @@
 <section class="slide">
     <h1>Pointer Lock API</h1>
+    <canvas id="pointer-lock-15" style="height: 200px; width: 200px;"></canvas>
     <pre><code class="javascript" contenteditable="true">
 
     </code></pre>
@@ -7,6 +8,83 @@
 
 <script type="text/javascript">
 
+    if (!fwuwcua15.hasOwnProperty('PointerLockAPI')) {
+        fwuwcua15.PointerLockAPI = (function () {
 
+            'use strict';
+
+            function PointerLockAPI(id) {
+                this.el = document.getElementById(id);
+
+                if (this.isExists()) {
+                    document.exitPointerLock = document.exitPointerLock ||
+                                            document.mozExitPointerLock ||
+                                            document.webkitExitPointerLock;
+                    this.addEventListeners();
+                }
+            }
+
+            PointerLockAPI.prototype = {
+                isExists: function () {
+                    this.el.requestPointerLock = this.el.requestPointerLock ||
+                                                this.el.mozRequestPointerLock ||
+                                                this.el.webkitRequestPointerLock ||
+                                                null;
+
+                    return this.el.requestPointerLock;
+                },
+                isLocked: function () {
+                    return document.pointerLockElement === this.el ||
+                        document.mozPointerLockElement === this.el ||
+                        document.webkitPointerLockElement === this.el;
+                },
+                addEventListeners: function () {
+                    this.addOnClickListener()
+                        .addPointerLockChangeListener();
+
+                    return this;
+                },
+                addOnClickListener: function () {
+                    this.el.addEventListener('click', function () {
+
+                        if (!this.isLocked()) {
+                            this.el.requestPointerLock();
+                        } else {
+                            document.exitPointerLock();
+                        }
+                    }.bind(this), false);
+
+                    return this;
+                },
+                addPointerLockChangeListener: function () {
+                    document.addEventListener('pointerlockchange', this.onPointerLockChange.bind(this), false);
+                    document.addEventListener('mozpointerlockchange', this.onPointerLockChange.bind(this), false);
+                    document.addEventListener('webkitpointerlockchange', this.onPointerLockChange.bind(this), false);
+
+                    return this;
+                },
+                onPointerLockChange: function () {
+
+                    if (this.isLocked()) {
+                        document.addEventListener("mousemove", this.onMouseMove.bind(this), false);
+                    } else {
+                        document.removeEventListener("mousemove", this.onMouseMove.bind(this), false);
+                    }
+                },
+                onMouseMove: function (event) {
+                    var pos = {
+                        x: event.movementX || event.mozMovementX || event.webkitMovementX || 0,
+                        y: event.movementY || event.mozMovementY || event.webkitMovementY || 0
+                    };
+
+
+                }
+            };
+
+            return PointerLockAPI;
+        })();
+    }
+
+    new fwuwcua15.PointerLockAPI('pointer-lock-15');
 
 </script>

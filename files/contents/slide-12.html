@@ -2,13 +2,13 @@
     <h1>Screen Orientation API</h1>
     <div id="container-15"></div>
     <pre><code class="javascript" contenteditable="true">
-screen.addEventListener('orientationchange', function () {
-    alert(screen.orientation);
+screen.orientation.addEventListener('change', function () {
+    alert(screen.orientation.type);
 });
 ...
-screen.unlockOrientation();
+screen.orientation.unlock();
 ...
-screen.lockOrientation('portrait'); // landscape
+screen.orientation.lock('portrait');
     </code></pre>
 </section>
 <script type="text/javascript">
@@ -21,49 +21,35 @@ screen.lockOrientation('portrait'); // landscape
             function ScreenOrientationAPI() {
 
                 if (this.isExists()) {
+                    if ('orientation' in screen && 'angle' in screen.orientation) {
+                        screen.orientation.addEventListener('change', this.update.bind(this));
+                    } else {
+                        screen.addEventListener(this.prefix + 'orientationchange', this.update.bind(this));
+                    }
                     this.update();
-                    this.addEventListeners();
                 }
             }
 
             ScreenOrientationAPI.prototype.isExists = function () {
-                var prefixes = ['webkit','moz','ms','o'],
-                    orientationchange = 'onorientationchange';
+                this.prefix = 'orientation' in screen ? '' :
+                        'mozOrientation' in screen ? 'moz' :
+                        'msOrientation' in screen ? 'ms' :
+                        null;
 
-                if (orientationchange in screen) {
-                    this.orientationchange = orientationchange;
-                } else {
-                    for (var i = 0; i < prefixes.length; i++) {
-                        orientationchange = 'on'+ prefixes[i] + 'orientationchange';
-
-                        if (orientationchange in screen) {
-                            this.orientationchange = orientationchange;
-                            break;
-                        }
-                    }
-                }
-                this.lockOrientation = screen.lockOrientation || screen.webkitLockOrientation || screen.mozLockOrientation || screen.msLockOrientation || null;
-                this.unlockOrientation = screen.unlockOrientation || screen.webkitUnlockOrientation || screen.mozUnlockOrientation || screen.msUnlockOrientation || null;
-                this.orientation = screen.orientation || screen.webkitOrientation || screen.mozOrientation || screen.msOrientation || null;
-
-                return this.orientation;
-            };
-
-            ScreenOrientationAPI.prototype.addEventListeners = function () {
-                var self = this;
-
-                if (this.orientationchange) {
-                    screen.addEventListener(this.orientationchange.replace(/^on/, ''), function () {
-                        self.update();
-                    });
-                }
+                return this.prefix !== null;
             };
 
             ScreenOrientationAPI.prototype.update = function () {
-                this.orientation = screen.orientation || screen.webkitOrientation || screen.mozOrientation || screen.msOrientation || null;
-                document.getElementById('container-15').innerHTML = '<p>' + this.orientation + '</p>';
-                document.getElementsByClassName('slide')[0].className = 'slide ' + this.orientation;
-                document.body.className = this.orientation;
+                var type;
+
+                if ('orientation' in screen && 'angle' in screen.orientation) {
+                    type = screen.orientation.type;
+                } else {
+                    type = screen.webkitOrientation || screen.mozOrientation || screen.msOrientation || '';
+                }
+                document.getElementById('container-15').innerHTML = '<p>' + type + '</p>';
+                document.getElementsByClassName('slide')[0].className = 'slide ' + type;
+                document.body.className = type;
                 this.timer && clearTimeout(this.timer);
                 this.timer = setTimeout(function () {
                     document.body.className = '';

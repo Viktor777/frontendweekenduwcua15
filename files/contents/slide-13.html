@@ -8,26 +8,22 @@ window.addEventListener('userproximity', function (event) {
 </section>
 <script type="text/javascript">
 
-    if (!fwuwcua15.hasOwnProperty('deviceProximity')) {
-        fwuwcua15.deviceProximity = function () {
+    if (!fwuwcua15.hasOwnProperty('deviceProximityAPI')) {
+        fwuwcua15.deviceProximityAPI = function () {
 
             'use strict';
 
-            var toggled = false;
-
             if ('onuserproximity' in window) {
                 window.addEventListener('userproximity', function (event) {
-                    console.log(event);
 
-                    if (event.near && !toggled) {
-                        toggled = !toggled;
-                        document.getElementById('slide-18').classList.toggle('dark');
+                    if (event.near) {
+                        document.getElementById('slide-18').classList.toggle('stopped');
                     }
-                });
+                }, false);
             }
         };
     }
 
-    fwuwcua15.deviceProximity();
+    fwuwcua15.deviceProximityAPI();
 
 </script>

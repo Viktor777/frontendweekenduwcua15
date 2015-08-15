@@ -13,15 +13,6 @@
     height: auto
     position: relative
     width: auto
-  &.dark:after
-    background-color: rgba(0,0,0,0.8)
-    content: ''
-    position: absolute
-    top: 0
-    right: 0
-    bottom: 0
-    left: 0
-    z-index: 2
   video
     max-width: 100%
   img
@@ -74,7 +65,8 @@
       position: static
       +translate(0, 0)
   &.portrait,
-  &.portrait-primary
+  &.portrait-primary,
+  &.stopped
     background: darkred
   &.landscape,
   &.landscape-primary

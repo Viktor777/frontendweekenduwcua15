@@ -7,7 +7,7 @@ su.lang = "ru";
 su.text = "Привет";
 speechSynthesis.speak(su);
     </code></pre>
-    <input type="text" id="input-19" class="input" placeholder="Пожалуйста, поговори со мной">
+    <label for="input-19">Пожалуйста, поговори со мной</label> <input type="text" id="input-19" class="input">
 </section>
 <script type="text/javascript">
 
@@ -18,16 +18,18 @@ speechSynthesis.speak(su);
 
             function SpeechAPI(id, lang) {
                 this.el = document.getElementById(id);
+                this.label = document.querySelector('[for="' + id + '"]');
                 this.lang = lang;
 
-                this.el.addEventListener('focus', function () {
-                    this.speak(event.target.placeholder)
-                            .then(function () {
-                                return this.recognize();
-                            }.bind(this)).then(function (text) {
-                                this.el.value = text;
-                            }.bind(this));
-                        }.bind(this), false);
+                this.label.addEventListener('click', function (event) {
+                    this.speak(event.target.textContent || event.target.innerText)
+                        .then(function () {
+                            return this.recognizer ? this.recognizer.start() :this.recognize()
+                                .then(function (text) {
+                                    this.el.value = text;
+                                }.bind(this));
+                        }.bind(this));
+                }.bind(this), false);
             }
 
             SpeechAPI.prototype = {
@@ -36,22 +38,21 @@ speechSynthesis.speak(su);
                         if (!SpeechSynthesisUtterance) {
                             reject('API not supported');
                         }
+                        this.utterance = new SpeechSynthesisUtterance(text);
 
-                        var utterance = new SpeechSynthesisUtterance(text);
-
-                        utterance.lang = this.lang;
-                        utterance.addEventListener('end', function() {
+                        this.utterance.lang = this.lang;
+                        this.utterance.addEventListener('end', function() {
                             console.log('Synthesizing completed');
                             resolve();
                         });
 
-                        utterance.addEventListener('error', function (event) {
+                        this.utterance.addEventListener('error', function (event) {
                             console.log('Synthesizing error');
                             reject('An error has occurred while speaking: ' + event.error);
                         });
 
                         console.log('Synthesizing the text: ' + text);
-                        speechSynthesis.speak(utterance);
+                        speechSynthesis.speak(this.utterance);
                     }.bind(this));
                 },
                 recognize: function() {
@@ -61,10 +62,9 @@ speechSynthesis.speak(su);
                         if (SpeechRecognition === null) {
                             reject('API not supported');
                         }
+                        this.recognizer = new SpeechRecognition();
 
-                        var recognizer = new SpeechRecognition();
-
-                        recognizer.addEventListener('result', function (event) {
+                        this.recognizer.addEventListener('result', function (event) {
                             console.log('Recognition completed');
                             for (var i = event.resultIndex; i < event.results.length; i++) {
                                 if (event.results[i].isFinal) {
@@ -73,24 +73,24 @@ speechSynthesis.speak(su);
                             }
                         });
 
-                        recognizer.addEventListener('error', function (event) {
+                        this.recognizer.addEventListener('error', function (event) {
                             console.log('Recognition error');
                             reject('An error has occurred while recognizing: ' + event.error);
                         });
 
-                        recognizer.addEventListener('nomatch', function () {
+                        this.recognizer.addEventListener('nomatch', function () {
                             console.log('Recognition ended because of nomatch');
                             reject('Error: sorry but I could not find a match');
                         });
 
-                        recognizer.addEventListener('end', function () {
+                        this.recognizer.addEventListener('end', function () {
                             console.log('Recognition ended');
                             reject('Error: sorry but I could not recognize your speech');
                         });
 
                         console.log('Recognition started');
-                        recognizer.start();
-                    });
+                        this.recognizer.start();
+                    }.bind(this));
                 }
             };
 
