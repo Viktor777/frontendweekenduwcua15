@@ -83,7 +83,7 @@ document.exitPointerLock();
                 },
                 onMouseMove: function (event) {
 
-                    if (!this.isLocked()) {
+                    if (this.isLocked()) {
                         this.pos.x += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
                         this.pos.y += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
                         this.draw();
